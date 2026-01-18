@@ -1,0 +1,7 @@
+{
+  "name": "Pizzatuba 2.0 - Premium Pizza Experience",
+  "description": "A high-end, mobile-first digital menu and booking experience for Pizzatuba in Abja-Paluoja, featuring bento-grid layouts and instant contact actions.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
