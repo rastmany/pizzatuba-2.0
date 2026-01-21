@@ -33,12 +33,13 @@ export const MENU_ITEMS: MenuItem[] = [
 
 export const CONTACT_INFO = {
   phone: '+372 58260698',
-  address: 'Pärnu mnt 15, Abja-Paluoja, 69403 Viljandi maakond',
+  address: 'Pärnu mnt 19, Abja-Paluoja, 69403 Viljandi maakond',
   email: 'info@pizzatuba.ee'
 };
 
 export const OPENING_HOURS = [
-  { day: 'E-N', hours: '11:00 - 20:00' },
-  { day: 'R-L', hours: '11:00 - 22:00' },
-  { day: 'P', hours: '12:00 - 19:00' }
+  { day: 'N', hours: '18:00 - 21:00' },
+  { day: 'R-L', hours: '12:00 - 21:00' },
+  { day: 'P', hours: '12:00 - 20:00' },
+  { day: 'E-K', hours: 'Suletud' }
 ];

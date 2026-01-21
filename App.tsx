@@ -3,9 +3,15 @@ import React, { useState, useEffect } from 'react';
 import { Category, MenuItem } from './types';
 import { MENU_ITEMS, CONTACT_INFO, OPENING_HOURS } from './constants';
 import { useContactForm } from './src/hooks/useContactForm';
+import { EventsPage } from './EventsPage';
 
-const Navbar: React.FC = () => {
+interface NavigationProps {
+  onNavigate: (view: string) => void;
+}
+
+const Navbar: React.FC<NavigationProps> = ({ onNavigate }) => {
   const [scrolled, setScrolled] = useState(false);
+  const [status, setStatus] = useState({ isOpen: false, text: '' });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -15,36 +21,188 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    const checkStatus = () => {
+      const now = new Date();
+      const day = now.getDay();
+      const hour = now.getHours();
+      const minute = now.getMinutes();
+      const currentTime = hour + minute / 60;
+
+      const hoursMap: { [key: number]: { open: number; close: number; closed?: boolean } } = {
+        1: { open: 0, close: 0, closed: true },
+        2: { open: 0, close: 0, closed: true },
+        3: { open: 0, close: 0, closed: true },
+        4: { open: 18, close: 21 },
+        5: { open: 12, close: 21 },
+        6: { open: 12, close: 21 },
+        0: { open: 12, close: 20 },
+      };
+
+      const todayHours = hoursMap[day];
+
+      if (!todayHours.closed && currentTime >= todayHours.open && currentTime < todayHours.close) {
+        setStatus({ isOpen: true, text: 'Avatud' });
+        return;
+      }
+
+      if (!todayHours.closed && currentTime < todayHours.open) {
+        setStatus({ isOpen: false, text: `${todayHours.open}:00` });
+        return;
+      }
+
+      let nextDay = (day + 1) % 7;
+      let daysChecked = 0;
+      while (daysChecked < 7) {
+        const nextHours = hoursMap[nextDay];
+        if (!nextHours.closed) {
+          const dayShort = ['P', 'E', 'T', 'K', 'N', 'R', 'L'];
+          setStatus({ isOpen: false, text: `${dayShort[nextDay]} ${nextHours.open}:00` });
+          return;
+        }
+        nextDay = (nextDay + 1) % 7;
+        daysChecked++;
+      }
+      setStatus({ isOpen: false, text: 'Suletud' });
+    };
+
+    checkStatus();
+    const interval = setInterval(checkStatus, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'py-3 sticky-nav-blur border-b border-ivory-dark/50 shadow-sm' : 'py-6 bg-transparent'}`}>
       <div className="max-w-6xl mx-auto px-6 flex justify-between items-center">
-        <div className={`text-2xl font-outfit font-extrabold tracking-tight ${scrolled ? 'text-pizzatuba-orange' : 'text-white'}`}>
-          PIZZATUBA
+        <div className="flex items-center space-x-4">
+          <div className={`text-2xl font-outfit font-extrabold tracking-tight ${scrolled ? 'text-pizzatuba-orange' : 'text-white'}`}>
+            PIZZATUBA
+          </div>
+          {/* Compact status indicator */}
+          <div className={`hidden lg:flex items-center space-x-1.5 px-2 py-0.5 rounded-full text-[7px] font-bold tracking-wide transition-all border ${status.isOpen
+            ? (scrolled ? 'bg-green-50 text-green-700 border-green-200' : 'bg-green-900/40 text-green-100 border-green-500/30 backdrop-blur-md shadow-[0_0_15px_rgba(34,197,94,0.3)]')
+            : (scrolled ? 'bg-red-50 text-red-700 border-red-200' : 'bg-red-950/40 text-red-100 border-red-500/30 backdrop-blur-md shadow-[0_0_15px_rgba(239,68,68,0.3)]')}`}>
+            <span className={`w-1 h-1 rounded-full shadow-lg ${status.isOpen ? 'bg-green-500 shadow-green-500' : 'bg-red-500 shadow-red-500'} ${!status.isOpen ? 'animate-pulse' : ''}`}></span>
+
+            <div className="flex items-center space-x-2">
+              <span className="uppercase">
+                {status.isOpen ? 'AVATUD' : 'SULETUD'}
+              </span>
+              <span className={`h-3 w-px ${status.isOpen ? (scrolled ? 'bg-green-300' : 'bg-green-500/30') : (scrolled ? 'bg-red-300' : 'bg-red-500/30')}`}></span>
+              <span className="uppercase whitespace-nowrap">
+                {status.isOpen ? '' : `AVAME ${status.text}`}
+              </span>
+            </div>
+          </div>
         </div>
         <div className="hidden md:flex space-x-8 text-sm font-semibold">
-          <a href="#menu" className={`${scrolled ? 'text-gray-700 hover:text-pizzatuba-orange' : 'text-white/90 hover:text-white'}`}>Menüü</a>
-          <a href="#about" className={`${scrolled ? 'text-gray-700 hover:text-pizzatuba-orange' : 'text-white/90 hover:text-white'}`}>Meist</a>
-          <a href="#events" className={`${scrolled ? 'text-gray-700 hover:text-pizzatuba-orange' : 'text-white/90 hover:text-white'}`}>Üritused</a>
-          <a href="#contact" className={`${scrolled ? 'text-gray-700 hover:text-pizzatuba-orange' : 'text-white/90 hover:text-white'}`}>Kontakt</a>
+          <button onClick={() => onNavigate('home')} className={`${scrolled ? 'text-gray-700 hover:text-pizzatuba-orange' : 'text-white/90 hover:text-white'}`}>Menüü</button>
+          <button onClick={() => onNavigate('home')} className={`${scrolled ? 'text-gray-700 hover:text-pizzatuba-orange' : 'text-white/90 hover:text-white'}`}>Meist</button>
+          <button onClick={() => onNavigate('home')} className={`${scrolled ? 'text-gray-700 hover:text-pizzatuba-orange' : 'text-white/90 hover:text-white'}`}>Kontakt</button>
         </div>
-        <a
-          href={`tel:${CONTACT_INFO.phone}`}
-          className={`px-5 py-2 rounded-full font-bold text-sm transition-all ${scrolled ? 'bg-pizzatuba-orange text-white' : 'bg-white text-pizzatuba-orange shadow-lg hover:scale-105'}`}
-        >
-          Telli kohe
-        </a>
+        <div className="flex items-center space-x-3">
+          <a
+            href="https://waze.com/ul/hud6w6j60t"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`hidden sm:flex items-center space-x-1 px-4 py-2 rounded-full font-bold text-sm transition-all ${scrolled ? 'bg-indigo-500/80 text-white hover:bg-indigo-600/90' : 'bg-white/20 backdrop-blur-sm text-white border border-white/30 hover:bg-white/30'}`}
+          >
+            <span>🚗</span>
+            <span>Waze</span>
+          </a>
+          <a
+            href={`tel:${CONTACT_INFO.phone}`}
+            className={`px-5 py-2 rounded-full font-bold text-sm transition-all ${scrolled ? 'bg-pizzatuba-orange text-white' : 'bg-white text-pizzatuba-orange shadow-lg hover:scale-105'}`}
+          >
+            Telli kohe
+          </a>
+        </div>
       </div>
     </nav>
   );
 };
 
 const Hero: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [status, setStatus] = useState({ isOpen: false, text: '' });
+  const [sloganIndex, setSloganIndex] = useState(0);
+
+  // Rotating headline slogans - Conversion-focused with emotional triggers
+  const slogans = [
+    "Tule soojale.\nMe ootame sind.",
+    "Ehtne tuli.\nEhtne maitse.",
+    "Sul on koht,\nkuhu alati tulla.",
+    "Puupliidil küpsetatud.\nArmastusega serveeritud.",
+    "Mitte pizza.\nKogemus.",
+    "Lõpuks koht,\nkus lihtsalt olla.",
+    "Ivo retsept.\nMulgi hing.",
+    "Kuna viimati\ntegid midagi enda jaoks?",
+    "Tule üksi.\nMine sõpradega.",
+    "Koht, kus\naeg peatub.",
+    "Siin ei kiirusta\nkeegi.",
+    "Abja süda\ntuksub tugevalt.",
+    "Tere tulemast\nkoju."
+  ];
+
 
   useEffect(() => {
-    const now = new Date();
-    const hour = now.getHours();
-    setIsOpen(hour >= 11 && hour < 20);
+    const sloganInterval = setInterval(() => {
+      setSloganIndex((prev) => (prev + 1) % slogans.length);
+    }, 4500);
+    return () => clearInterval(sloganInterval);
+  }, [slogans.length]);
+
+  useEffect(() => {
+    const checkStatus = () => {
+      const now = new Date();
+      const day = now.getDay(); // 0 = Sunday
+      const hour = now.getHours();
+      const minute = now.getMinutes();
+      const currentTime = hour + minute / 60;
+
+      // Map days to specific hours (Mon=1, Sun=0)
+      // closed: true marks days when the place is closed
+      const hoursMap: { [key: number]: { open: number; close: number; closed?: boolean } } = {
+        1: { open: 0, close: 0, closed: true }, // E
+        2: { open: 0, close: 0, closed: true }, // T
+        3: { open: 0, close: 0, closed: true }, // K
+        4: { open: 18, close: 21 }, // N
+        5: { open: 12, close: 21 }, // R
+        6: { open: 12, close: 21 }, // L
+        0: { open: 12, close: 20 }, // P
+      };
+
+      const todayHours = hoursMap[day];
+
+      if (!todayHours.closed && currentTime >= todayHours.open && currentTime < todayHours.close) {
+        setStatus({ isOpen: true, text: 'Nüüd avatud' });
+        return;
+      }
+
+      if (!todayHours.closed && currentTime < todayHours.open) {
+        setStatus({ isOpen: false, text: `Suletud (Avame täna ${todayHours.open}:00)` });
+        return;
+      }
+
+      // Find next opening
+      let nextDay = (day + 1) % 7;
+      let daysChecked = 0;
+      while (daysChecked < 7) {
+        const nextHours = hoursMap[nextDay];
+        if (!nextHours.closed) {
+          const dayNames = ['pühapäeval', 'esmaspäeval', 'teisipäeval', 'kolmapäeval', 'neljapäeval', 'reedel', 'laupäeval'];
+          setStatus({ isOpen: false, text: `Suletud (Avame ${dayNames[nextDay]} ${nextHours.open}:00)` });
+          return;
+        }
+        nextDay = (nextDay + 1) % 7;
+        daysChecked++;
+      }
+
+      setStatus({ isOpen: false, text: 'Suletud' });
+    };
+
+    checkStatus();
+    const interval = setInterval(checkStatus, 60000); // Update every minute
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -58,28 +216,20 @@ const Hero: React.FC = () => {
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-6 w-full text-white">
-        <div className="flex flex-col items-start max-w-2xl">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-6">
-            <span className={`w-2 h-2 rounded-full ${isOpen ? 'bg-green-400' : 'bg-red-400'}`}></span>
-            <span className="text-xs font-bold uppercase tracking-wider">{isOpen ? 'Nüüd avatud' : 'Suletud'}</span>
-            <span className="text-xs text-white/60">| Täna: 11:00 - 20:00</span>
+        <div className="flex flex-col items-start max-w-3xl">
+          {/* Animated headline slider */}
+          <div className="h-[140px] md:h-[200px] mb-8 overflow-hidden flex items-center">
+            <h1
+              key={sloganIndex}
+              className="text-3xl md:text-5xl lg:text-6xl font-outfit font-extrabold leading-[1.15] tracking-tighter rotating-text whitespace-pre-line"
+            >
+              <span className="animated-headline">{slogans[sloganIndex]}</span>
+            </h1>
           </div>
-
-          <h1 className="text-5xl md:text-7xl font-outfit font-extrabold leading-[1.1] mb-6 tracking-tighter">
-            Tere tulemast <br />
-            <span className="text-pizzatuba-orange">Pizzatuppa!</span>
-          </h1>
-
-          <p className="text-lg md:text-xl text-white/80 mb-10 leading-relaxed font-medium">
-            Käsitöö pitsad Abja-Paluoja südames. Ehtne kiviahju maitse ja parimad toorained otse Sinu taldrikul.
-          </p>
 
           <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
             <a href="#menu" className="px-8 py-4 bg-pizzatuba-orange text-white rounded-xl font-bold text-lg text-center hover:bg-[#e65c00] transition-all transform hover:-translate-y-1 shadow-xl">
               Vaata menüüd
-            </a>
-            <a href="#contact" className="px-8 py-4 bg-white/10 backdrop-blur-md border border-white/30 text-white rounded-xl font-bold text-lg text-center hover:bg-white/20 transition-all">
-              Broneeri laud
             </a>
           </div>
         </div>
@@ -95,14 +245,14 @@ const MenuSection: React.FC = () => {
   const filteredItems = MENU_ITEMS.filter(item => item.category === activeCategory);
 
   return (
-    <section id="menu" className="py-24 bg-ivory">
+    <section id="menu" className="py-12 bg-ivory">
       <div className="max-w-4xl mx-auto px-6">
-        <div className="text-center mb-16">
+        <div className="text-center mb-8">
           <h2 className="text-4xl md:text-5xl font-outfit font-extrabold mb-4">Menüü</h2>
-          <p className="text-gray-500 max-w-xl mx-auto italic">Kvaliteetsed koostisosad ja ehtne maitseelamus.</p>
+          <p className="text-gray-500 max-w-xl mx-auto italic">Lihtne on parim. Värske on kohustuslik.</p>
         </div>
 
-        <div className="flex justify-center mb-16 sticky top-[72px] z-40 py-4 bg-ivory/95 backdrop-blur-sm border-b border-ivory-dark md:border-none">
+        <div className="flex justify-center mb-6 sticky top-[72px] z-40 py-3 bg-ivory/95 backdrop-blur-sm border-b border-ivory-dark md:border-none">
           <div className="flex bg-ivory-soft p-1 rounded-2xl border border-ivory-dark">
             {categories.map(cat => (
               <button
@@ -120,7 +270,7 @@ const MenuSection: React.FC = () => {
           {filteredItems.map(item => (
             <div
               key={item.id}
-              className={`group flex items-start justify-between py-6 border-b border-ivory-dark transition-all hover:bg-ivory-dark/30 px-4 rounded-2xl -mx-4`}
+              className={`group flex items-start justify-between py-3 border-b border-ivory-dark transition-all hover:bg-ivory-dark/30 px-4 rounded-xl -mx-4`}
             >
               <div className="flex-1 pr-8">
                 <div className="flex items-center space-x-2 mb-1">
@@ -146,7 +296,7 @@ const MenuSection: React.FC = () => {
           ))}
         </div>
 
-        <div className="mt-16 text-center text-sm text-gray-400 border-t border-ivory-dark pt-8">
+        <div className="mt-8 text-center text-sm text-gray-400 border-t border-ivory-dark pt-4">
           <p>* Kõik hinnad sisaldavad käibemaksu.</p>
         </div>
       </div>
@@ -156,9 +306,9 @@ const MenuSection: React.FC = () => {
 
 const ValueProps: React.FC = () => {
   const props = [
-    { title: 'Käsitöö', desc: 'Iga pitsa põhi on rullitud käsitsi ja valmib kiviplaadil.', icon: '🍕' },
-    { title: 'Kohalik Tooraine', desc: 'Kasutame nii palju kui võimalik kohalikke ja värskeid saadusi.', icon: '🌿' },
-    { title: 'Hubane Atmosfäär', desc: 'Meie juures on alati soe vastuvõtt ja mugav olemine.', icon: '🏠' }
+    { title: 'Ehtne Tuli', desc: 'Iga pizza küpseb kivi plaadil üle 400 kraadi juures. Sama meetod, mida kasutati Itaalias 100 aastat tagasi.', icon: '🔥' },
+    { title: 'Käsitöö Hing', desc: 'Tainas käärib 72 tundi. Iga pizza on vormitud käsitsi. Siin ei ole mingit masstoodetud.', icon: '🤲' },
+    { title: 'Sinu Koht', desc: 'Koht, kus sind tuntakse. Kus aeg peatub. Kus toit on teraapia.', icon: '🏠' }
   ];
 
   return (
@@ -178,9 +328,83 @@ const ValueProps: React.FC = () => {
   );
 };
 
-const EventsSection: React.FC = () => {
+const FacebookFeed: React.FC = () => {
   return (
-    <section id="events" className="py-24 bg-ivory overflow-hidden">
+    <section className="py-12 bg-ivory border-b border-ivory-dark">
+      <div className="max-w-6xl mx-auto px-6 text-center">
+        <h2 className="text-3xl font-outfit font-bold mb-8">Mis meil toimub</h2>
+
+        {/* Stories-like horizontal scroll layout */}
+        <div className="flex overflow-x-auto space-x-6 pb-8 justify-start lg:justify-center px-4 -mx-4 scrollbar-hide">
+          {[1, 2, 3, 4].map((item) => (
+            <div
+              key={item}
+              className="flex-shrink-0 w-[280px] h-[450px] bg-white rounded-2xl shadow-xl border border-gray-200 relative overflow-hidden group hover:scale-[1.02] transition-transform duration-300 cursor-pointer"
+            >
+              {/* Header inside the card */}
+              <div className="absolute top-0 left-0 right-0 p-4 bg-gradient-to-b from-black/60 to-transparent z-10 flex items-center space-x-3">
+                <div className="w-8 h-8 rounded-full bg-pizzatuba-orange border-2 border-white flex items-center justify-center text-white font-bold text-xs">
+                  PT
+                </div>
+                <span className="text-white font-bold text-sm shadow-sm">Pizzatuba</span>
+              </div>
+
+              {/* Mock Content */}
+              <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
+                <div className="text-center opacity-40">
+                  <div className="text-4xl mb-2">📸</div>
+                  <p className="font-bold text-gray-500">Postitus {item}</p>
+                </div>
+                {/* 
+                  This image would be dynamic in real implementation.
+                  Using a placeholder image for visual effect:
+                */}
+                <img
+                  src={`https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?auto=format&fit=crop&w=400&q=80&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`}
+                  alt="Post"
+                  className="absolute inset-0 w-full h-full object-cover mix-blend-multiply opacity-30 hover:opacity-100 transition-opacity duration-500"
+                />
+              </div>
+
+              {/* Footer inside the card */}
+              <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent z-10 text-white text-left">
+                <p className="text-xs line-clamp-2 mb-2">
+                  Tule maitsma meie uut eripakkumist! Värske tooraine ja parimad maitsed ootavad sind. #pizzatuba #abjapaluoja
+                </p>
+                <div className="text-[10px] opacity-75">2 tundi tagasi</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center space-x-2 text-pizzatuba-orange font-bold hover:text-[#e65c00] transition-colors mt-4">
+          <span>Vaata kõiki postitusi</span>
+          <span>→</span>
+        </a>
+      </div>
+    </section>
+  );
+};
+
+import { EventCalculator } from './src/components/EventCalculator';
+
+// ... (other imports)
+
+const EventsSection: React.FC<NavigationProps> = ({ onNavigate }) => {
+  const [showCalculator, setShowCalculator] = useState(false);
+  const [wordIndex, setWordIndex] = useState(0);
+
+  const words = ['perele', 'südamele', 'külalistele', 'sõpradele', 'peole', 'puhkusele', 'üritusele'];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWordIndex((prev) => (prev + 1) % words.length);
+    }, 3500);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <section id="events" className="py-24 bg-ivory overflow-hidden relative">
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex flex-col lg:flex-row items-center gap-16">
           <div className="lg:w-1/2 relative">
@@ -192,9 +416,20 @@ const EventsSection: React.FC = () => {
             />
           </div>
           <div className="lg:w-1/2">
-            <h2 className="text-4xl md:text-5xl font-outfit font-extrabold mb-6">Tähista meiega</h2>
+            <h2 className="text-4xl md:text-5xl font-outfit font-extrabold mb-6 min-h-[1.2em]">
+              Koht sinu{' '}
+              <span
+                key={wordIndex}
+                className="bg-clip-text text-transparent bg-gradient-to-r from-orange-400 via-red-600 to-red-800 animate-pulse"
+                style={{ animationDuration: '3.5s' }}
+              >
+                {words[wordIndex]}
+              </span>
+            </h2>
             <p className="text-gray-500 text-lg mb-8 leading-relaxed">
-              Pizzatuba on ideaalne koht sünnipäevadeks, firmaüritusteks või sõpradega koosolemiseks. Mahutame mugavalt kuni 25 inimest.
+              Meie hubane saal on loodud naeru ja ühiste hetkede jaoks. Siin on ruumi 25-le lähedasele ja aega nautimiseks.
+              <br /><br />
+              Et peo korraldamine oleks stressivaba, lõime sulle abimehe. Kliki nupule ja kasuta meie kalkulaatorit – nii näed kohe, kui lihtne on unistuste üritus teoks teha.
             </p>
             <ul className="space-y-4 mb-10">
               {['Privaatne ruum', 'Erimenüü kokkuleppel', 'Hubane sisustus', 'Muusika võimalus'].map((item, i) => (
@@ -204,12 +439,49 @@ const EventsSection: React.FC = () => {
                 </li>
               ))}
             </ul>
-            <a href="#contact" className="inline-block px-10 py-4 bg-gray-900 text-white rounded-2xl font-bold hover:bg-gray-800 transition-all shadow-lg">
-              Küsi pakkumist
-            </a>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <button
+                onClick={() => setShowCalculator(true)}
+                className="inline-block px-10 py-4 bg-gray-900 text-white rounded-2xl font-bold hover:bg-gray-800 transition-all shadow-lg text-center"
+              >
+                Arvuta sündmuse hind
+              </button>
+              <a
+                href="https://waze.com/ul/hud6w6j60t"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center px-10 py-4 bg-white border border-gray-200 text-gray-800 rounded-2xl font-bold hover:bg-gray-50 transition-all shadow-md space-x-2"
+              >
+                <span>🚗</span>
+                <span>Navigeeri kohale</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Calculator Modal */}
+      {showCalculator && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setShowCalculator(false)}
+          ></div>
+          <div className="relative z-10 w-full max-w-5xl bg-white rounded-[40px] shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
+            <button
+              onClick={() => setShowCalculator(false)}
+              className="absolute top-6 right-6 z-20 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors"
+            >
+              ✕
+            </button>
+            <div className="p-8 md:p-12 bg-ivory">
+              <h2 className="text-3xl font-outfit font-bold mb-2 text-center">Planeeri oma sündmus</h2>
+              <p className="text-gray-500 text-center mb-8">Arvuta eelarve ja saada meile päring</p>
+              <EventCalculator />
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
@@ -221,17 +493,26 @@ const ContactForm: React.FC = () => {
     <section id="contact" className="py-24 bg-ivory-soft">
       <div className="max-w-6xl mx-auto px-6">
         <div className="bg-ivory rounded-[48px] shadow-2xl overflow-hidden flex flex-col md:flex-row border border-ivory-dark">
-          <div className="md:w-2/5 bg-pizzatuba-orange p-12 text-white flex flex-col justify-between">
+          <div className="md:w-2/5 bg-gradient-to-br from-orange-400 via-red-600 to-red-800 shadow-inner p-12 text-white flex flex-col justify-between">
             <div>
-              <h2 className="text-4xl font-outfit font-bold mb-8">Võta ühendust</h2>
-              <p className="text-white/80 mb-12">Soovid lauda broneerida või tellida suuremat kogust? Kirjuta või helista meile!</p>
+              <h2 className="text-4xl font-outfit font-bold mb-8">Räägime</h2>
+              <p className="text-white/80 mb-12">Broneeri laud. Planeeri üritus. Või lihtsalt küsi, mis täna ahjus on.</p>
 
               <div className="space-y-6">
                 <div className="flex items-start space-x-4">
                   <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-xl">📍</div>
                   <div>
                     <div className="font-bold text-sm uppercase tracking-wider mb-1">Asukoht</div>
-                    <div className="text-sm text-white/80">{CONTACT_INFO.address}</div>
+                    <div className="text-sm text-white/80 mb-2">{CONTACT_INFO.address}</div>
+                    <a
+                      href="https://waze.com/ul/hud6w6j60t"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center space-x-1 text-xs font-bold text-white bg-white/20 px-3 py-1.5 rounded-lg hover:bg-white/30 transition-all"
+                    >
+                      <span>🚗</span>
+                      <span>Ava Waze'is</span>
+                    </a>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
@@ -308,6 +589,17 @@ const ContactForm: React.FC = () => {
                 />
               </div>
               <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">Planeeritav eelarve (valikuline)</label>
+                <input
+                  type="text"
+                  value={formData.budget}
+                  onChange={(e) => setFormData(prev => ({ ...prev, budget: e.target.value }))}
+                  className="w-full px-5 py-4 bg-ivory-soft rounded-2xl border border-ivory-dark focus:bg-white focus:border-pizzatuba-orange focus:ring-0 transition-all outline-none"
+                  placeholder="nt. 200€"
+                  disabled={isSubmitting}
+                />
+              </div>
+              <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2">Sõnum või broneeringu info</label>
                 <textarea
                   rows={4}
@@ -322,8 +614,8 @@ const ContactForm: React.FC = () => {
                 type="submit"
                 disabled={isSubmitting}
                 className={`w-full py-5 rounded-2xl font-bold text-lg shadow-xl transition-all ${isSubmitting
-                    ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
-                    : 'bg-pizzatuba-orange text-white shadow-orange-500/20 hover:bg-[#e65c00]'
+                  ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-red-600 to-orange-500 text-white shadow-orange-500/20 hover:from-red-700 hover:to-orange-600'
                   }`}
               >
                 {isSubmitting ? (
@@ -416,30 +708,54 @@ const Footer: React.FC = () => {
 };
 
 const App: React.FC = () => {
+  const [view, setView] = useState('home');
+
+  const onNavigate = (newView: string) => {
+    setView(newView);
+    window.scrollTo(0, 0);
+  };
+
   return (
     <div className="antialiased selection:bg-pizzatuba-orange/30">
-      <Navbar />
-      <Hero />
-      <ValueProps />
-      <MenuSection />
-      <EventsSection />
-      <ContactForm />
+      <Navbar onNavigate={onNavigate} />
 
-      {/* Map Section */}
-      <div className="h-[400px] w-full grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-1000 overflow-hidden border-y border-ivory-dark">
-        <iframe
-          title="location"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2179.7425447101735!2d25.3562308!3d58.1258693!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46eb61f0084f7329%3A0xc3f8e58f00109918!2sPizzatuba!5e0!3m2!1set!2see!4v1700000000000!5m2!1set!2see"
-          width="100%"
-          height="100%"
-          style={{ border: 0 }}
-          allowFullScreen
-          loading="lazy"
-        ></iframe>
-      </div>
+      {view === 'home' ? (
+        <>
+          <Hero />
+          <FacebookFeed />
+          <EventsSection onNavigate={onNavigate} />
+          <MenuSection />
+          <ValueProps />
+
+          {/* Map Section */}
+          <div className="h-[400px] w-full grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-1000 overflow-hidden border-y border-ivory-dark">
+            <iframe
+              title="location"
+              src="https://embed.waze.com/iframe?zoom=16&lat=58.1258693&lon=25.3562308&ct=livemap"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen
+            ></iframe>
+            <a
+              href="https://waze.com/ul/hud6w6j60t"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="absolute bottom-4 right-4 bg-white/90 backdrop-blur px-4 py-2 rounded-lg shadow-lg text-sm font-bold text-gray-800 flex items-center space-x-2 border border-gray-200 hover:bg-white transition-all z-10"
+            >
+              <span>🚗</span>
+              <span>Sõida Waze-ga</span>
+            </a>
+          </div>
+
+          <ContactForm />
+          <StickyCTA />
+        </>
+      ) : (
+        <EventsPage onNavigate={onNavigate} />
+      )}
 
       <Footer />
-      <StickyCTA />
     </div>
   );
 };

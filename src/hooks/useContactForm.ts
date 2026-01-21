@@ -6,7 +6,10 @@ interface FormData {
     name: string;
     phone: string;
     email: string;
+    budget: string;
     message: string;
+    eventType?: string;
+    eventDate?: string;
 }
 
 interface UseContactFormReturn {
@@ -23,7 +26,10 @@ const initialFormData: FormData = {
     name: '',
     phone: '',
     email: '',
-    message: ''
+    budget: '',
+    message: '',
+    eventType: 'birthday',
+    eventDate: ''
 };
 
 export function useContactForm(): UseContactFormReturn {
@@ -49,6 +55,7 @@ export function useContactForm(): UseContactFormReturn {
     };
 
     const sanitizeInput = (input: string): string => {
+        if (!input) return '';
         return input
             .replace(/<[^>]*>/g, '') // Remove HTML tags
             .replace(/[<>"'&]/g, '') // Remove potentially dangerous characters
@@ -72,7 +79,10 @@ export function useContactForm(): UseContactFormReturn {
                 name: sanitizeInput(formData.name),
                 phone: sanitizeInput(formData.phone),
                 email: sanitizeInput(formData.email.toLowerCase()),
+                budget: sanitizeInput(formData.budget),
                 message: sanitizeInput(formData.message),
+                eventType: sanitizeInput(formData.eventType || ''),
+                eventDate: sanitizeInput(formData.eventDate || ''),
                 createdAt: serverTimestamp(),
                 status: 'new',
                 source: window.location.hostname

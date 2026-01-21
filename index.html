@@ -1,59 +1,183 @@
-
 <!DOCTYPE html>
 <html lang="et">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pizzatuba - Abja-Paluoja Parim Pitsa</title>
-    <meta name="description" content="Käsitöö pitsad Abja-Paluoja südames. Tule külla või telli ette: +372 58260698" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              'pizzatuba-orange': '#FF6900',
-              'ivory': '#FDFBF7',
-              'ivory-soft': '#F9F7F2',
-              'ivory-dark': '#F2EFE9',
-            }
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pizzatuba - Abja-Paluoja Parim Pitsa</title>
+  <meta name="description" content="Käsitöö pitsad Abja-Paluoja südames. Tule külla või telli ette: +372 58260698" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'pizzatuba-orange': '#FF6900',
+            'ivory': '#FDFBF7',
+            'ivory-soft': '#F9F7F2',
+            'ivory-dark': '#F2EFE9',
           }
         }
       }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #FDFBF7;
+      color: #1F1F1F;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    .font-outfit {
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .pizza-card-shadow {
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.03);
+    }
+
+    .sticky-nav-blur {
+      backdrop-filter: blur(12px);
+      background-color: rgba(253, 251, 247, 0.85);
+    }
+
+    /* Neon status animations */
+    @keyframes neon-run {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    @keyframes pulse-red {
+
+      0%,
+      100% {
+        box-shadow: 0 0 8px 2px rgba(239, 68, 68, 0.6), inset 0 0 4px rgba(239, 68, 68, 0.3);
+        border-color: rgba(239, 68, 68, 0.8);
+      }
+
+      50% {
+        box-shadow: 0 0 16px 4px rgba(239, 68, 68, 0.9), inset 0 0 8px rgba(239, 68, 68, 0.5);
+        border-color: rgba(239, 68, 68, 1);
+      }
+    }
+
+    .status-open {
+      background: linear-gradient(90deg, #22c55e, #4ade80, #86efac, #4ade80, #22c55e);
+      background-size: 200% 100%;
+      animation: neon-run 2s linear infinite;
+      box-shadow: 0 0 12px 3px rgba(34, 197, 94, 0.6), inset 0 0 6px rgba(34, 197, 94, 0.3);
+      border: 2px solid rgba(34, 197, 94, 0.8);
+    }
+
+    .status-closed {
+      animation: pulse-red 2s ease-in-out infinite;
+      border: 2px solid rgba(239, 68, 68, 0.8);
+      background: rgba(239, 68, 68, 0.15);
+    }
+
+    /* Headline animations */
+    @keyframes text-shimmer {
+      0% {
+        background-position: -200% center;
+      }
+
+      100% {
+        background-position: 200% center;
+      }
+    }
+
+    @keyframes float-text {
+
+      0%,
+      100% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+
+    @keyframes glow-pulse {
+
+      0%,
+      100% {
+        text-shadow: 0 0 20px rgba(255, 105, 0, 0.3), 0 0 40px rgba(255, 105, 0, 0.18);
+      }
+
+      50% {
+        text-shadow: 0 0 30px rgba(255, 105, 0, 0.48), 0 0 60px rgba(255, 105, 0, 0.3), 0 0 80px rgba(255, 105, 0, 0.18);
+      }
+    }
+
+    .animated-headline {
+      background: linear-gradient(90deg, #FF6900, #ffb366, #FF6900, #ff8533, #FF6900);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: text-shimmer 3s linear infinite, glow-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes fade-slide {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      10% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      90% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+    }
+
+    .rotating-text {
+      animation: fade-slide 4.5s ease-in-out infinite;
+    }
+  </style>
+  <script type="importmap"> {
+      "imports": {
+        "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+          "react": "https://esm.sh/react@^19.2.3",
+          "react/": "https://esm.sh/react@^19.2.3/"
+      }
+    }
+
     </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
-    <style>
-      body {
-        font-family: 'Inter', sans-serif;
-        background-color: #FDFBF7;
-        color: #1F1F1F;
-      }
-      h1, h2, h3, h4, .font-outfit {
-        font-family: 'Outfit', sans-serif;
-      }
-      .pizza-card-shadow {
-        box-shadow: 0 4px 20px -2px rgba(0,0,0,0.03);
-      }
-      .sticky-nav-blur {
-        backdrop-filter: blur(12px);
-        background-color: rgba(253, 251, 247, 0.85);
-      }
-    </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3",
-    "react/": "https://esm.sh/react@^19.2.3/"
-  }
-}
-</script>
-<link rel="stylesheet" href="/index.css">
+  <link rel="stylesheet" href="/index.css">
 </head>
-  <body>
-    <div id="root"></div>
+
+<body>
+  <div id="root"></div>
   <script type="module" src="/index.tsx"></script>
 </body>
+
 </html>
