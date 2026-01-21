@@ -221,7 +221,7 @@ const Hero: React.FC = () => {
           <div className="h-[140px] md:h-[200px] mb-8 overflow-hidden flex items-center">
             <h1
               key={sloganIndex}
-              className="text-3xl md:text-5xl lg:text-6xl font-outfit font-extrabold leading-[1.15] tracking-tighter rotating-text whitespace-pre-line"
+              className="text-3xl md:text-5xl lg:text-6xl font-outfit font-extrabold leading-[1.4] tracking-tighter rotating-text whitespace-pre-line"
             >
               <span className="animated-headline">{slogans[sloganIndex]}</span>
             </h1>
