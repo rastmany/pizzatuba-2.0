@@ -42,7 +42,7 @@ export const EventsPage: React.FC<EventsPageProps> = ({ onNavigate }) => {
                 </button>
 
                 <h1 className="text-4xl md:text-6xl font-outfit font-extrabold mb-6 text-gray-900 leading-tight">
-                    Korralda meeldejääv <span className="text-pizzatuba-orange">sündmus</span>
+                    Korralda meeldejääv <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-red-600 to-red-800 animate-pulse" style={{ animationDuration: '3.5s' }}>sündmus</span>
                 </h1>
                 <p className="text-xl text-gray-500 mb-12 max-w-2xl">
                     Kasuta allolevat kalkulaatorit, et planeerida oma üritust ja saada kohene hinna hinnang.
@@ -123,7 +123,7 @@ export const EventsPage: React.FC<EventsPageProps> = ({ onNavigate }) => {
                     </div>
 
                     {/* Form Section */}
-                    <div className="bg-gray-900 p-8 rounded-[32px] shadow-2xl text-white">
+                    <div className="bg-gradient-to-br from-orange-400 via-red-600 to-red-800 p-8 rounded-[32px] shadow-2xl text-white shadow-inner frame-glow">
                         <h2 className="text-2xl font-bold mb-6">Broneeri aeg</h2>
 
                         {isSuccess ? (
@@ -196,9 +196,9 @@ export const EventsPage: React.FC<EventsPageProps> = ({ onNavigate }) => {
                                 <button
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className="w-full py-4 bg-pizzatuba-orange hover:bg-[#e65c00] text-white rounded-xl font-bold shadow-lg shadow-orange-500/30 transition-all transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="w-full py-4 bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 text-white rounded-xl font-bold shadow-lg transition-all transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    {isSubmitting ? 'Saadan...' : `Saada päring (~${estimatedCost}€)`}
+                                    {isSubmitting ? 'Saadan...' : `Saada päring`}
                                 </button>
                             </form>
                         )}
