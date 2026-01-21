@@ -737,15 +737,7 @@ const App: React.FC = () => {
               style={{ border: 0 }}
               allowFullScreen
             ></iframe>
-            <a
-              href="https://waze.com/ul/hud6w6j60t"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="absolute bottom-4 right-4 bg-white/90 backdrop-blur px-4 py-2 rounded-lg shadow-lg text-sm font-bold text-gray-800 flex items-center space-x-2 border border-gray-200 hover:bg-white transition-all z-10"
-            >
-              <span>🚗</span>
-              <span>Sõida Waze-ga</span>
-            </a>
+
           </div>
 
           <ContactForm />
