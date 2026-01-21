@@ -1,3 +1,4 @@
+// Force rebuild for deployment verification
 import React, { useState, useEffect } from 'react';
 import { useContactForm } from './src/hooks/useContactForm';
 
