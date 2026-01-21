@@ -696,7 +696,7 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 text-[10px] md:text-xs text-gray-600 uppercase tracking-widest font-bold">
-          <p>© {new Date().getFullYear()} Pizzatuba. Kõik õigused kaitstud.</p>
+          <p>© {new Date().getFullYear()} Pizzatuba. Kõik õigused kaitstud. (v2.1)</p>
           <div className="flex space-x-6">
             <span className="hover:text-white cursor-pointer transition-colors">Privaatsustingimused</span>
             <span className="hover:text-white cursor-pointer transition-colors">Küpsised</span>
