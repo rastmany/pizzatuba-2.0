@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../firebase';
 
 interface FormData {
     name: string;
@@ -31,6 +29,9 @@ const initialFormData: FormData = {
     eventType: 'birthday',
     eventDate: ''
 };
+
+// Google Apps Script webhook URL
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyFUUXELkVO7hK914TLiwYrA2Fmc9Fnckr6c6aXlywXP72pOmQu4kEdd-qc03QCSgV1Sw/exec';
 
 export function useContactForm(): UseContactFormReturn {
     const [formData, setFormData] = useState<FormData>(initialFormData);
@@ -83,14 +84,21 @@ export function useContactForm(): UseContactFormReturn {
                 message: sanitizeInput(formData.message),
                 eventType: sanitizeInput(formData.eventType || ''),
                 eventDate: sanitizeInput(formData.eventDate || ''),
-                createdAt: serverTimestamp(),
-                status: 'new',
                 source: window.location.hostname
             };
 
-            // Save to Firestore
-            await addDoc(collection(db, 'submissions'), sanitizedData);
+            // Send to Google Apps Script
+            await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Google Apps Script requires no-cors mode
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(sanitizedData)
+            });
 
+            // В режиме no-cors мы не можем прочитать ответ,
+            // поэтому просто считаем успешным если нет ошибки
             setIsSuccess(true);
             setFormData(initialFormData);
 
