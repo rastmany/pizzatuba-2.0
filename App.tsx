@@ -332,49 +332,78 @@ const ValueProps: React.FC = () => {
 };
 
 const FacebookFeed: React.FC = () => {
-  useEffect(() => {
-    // Load Facebook SDK without APP_ID (works for public pages)
-    const script = document.createElement('script');
-    script.src = 'https://connect.facebook.net/et_EE/sdk.js#xfbml=1&version=v24.0';
-    script.async = true;
-    script.defer = true;
-    script.crossOrigin = 'anonymous';
-    document.body.appendChild(script);
-
-    return () => {
-      if (document.body.contains(script)) {
-        document.body.removeChild(script);
-      }
-    };
-  }, []);
+  // TODO: Replace with real Facebook posts using Graph API when access token is provided
+  // For now showing mock posts with beautiful Stories design
+  const mockPosts = [
+    {
+      id: 1,
+      image: '/images/582282028_834401975991220_6282355860653094478_n.png',
+      text: 'Hubane saal ja soe õhkkond ootavad sind! Broneeri aeg oma peole.',
+      time: '2 päeva tagasi'
+    },
+    {
+      id: 2,
+      image: 'https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?auto=format&fit=crop&w=400&q=80',
+      text: 'Värskelt küpsetatud pizza puuahjust! Tule ja maitse ise.',
+      time: '4 päeva tagasi'
+    },
+    {
+      id: 3,
+      image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=400&q=80',
+      text: 'Uued eripakkumised! Vaata meie menüüd ja telli kohe.',
+      time: '1 nädal tagasi'
+    },
+    {
+      id: 4,
+      image: 'https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?auto=format&fit=crop&w=400&q=80',
+      text: 'Täname kõiki külastajaid! Oleme avatud ja ootame teid tagasi.',
+      time: '2 nädalat tagasi'
+    }
+  ];
 
   return (
     <section className="py-12 bg-ivory border-b border-ivory-dark">
-      <div id="fb-root"></div>
       <div className="max-w-6xl mx-auto px-6 text-center">
         <h2 className="text-3xl font-outfit font-bold mb-8">Mis meil toimub</h2>
 
-        {/* Facebook Page Plugin */}
-        <div className="flex justify-center">
-          <div
-            className="fb-page"
-            data-href="https://www.facebook.com/PizzatubaOfficial"
-            data-tabs="timeline"
-            data-width="500"
-            data-height="600"
-            data-small-header="true"
-            data-adapt-container-width="true"
-            data-hide-cover="true"
-            data-show-facepile="true"
-          >
-            <blockquote cite="https://www.facebook.com/PizzatubaOfficial" className="fb-xfbml-parse-ignore">
-              <a href="https://www.facebook.com/PizzatubaOfficial">Pizzatuba</a>
-            </blockquote>
-          </div>
+        {/* Stories-like horizontal scroll layout */}
+        <div className="flex overflow-x-auto space-x-6 pb-8 justify-start lg:justify-center px-4 -mx-4 scrollbar-hide">
+          {mockPosts.map((post) => (
+            <a
+              key={post.id}
+              href="https://www.facebook.com/PizzatubaOfficial"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-shrink-0 w-[280px] h-[450px] bg-white rounded-2xl shadow-xl border border-gray-200 relative overflow-hidden group hover:scale-[1.02] transition-transform duration-300 cursor-pointer"
+            >
+              {/* Header inside the card */}
+              <div className="absolute top-0 left-0 right-0 p-4 bg-gradient-to-b from-black/60 to-transparent z-10 flex items-center space-x-3">
+                <div className="w-8 h-8 rounded-full bg-pizzatuba-orange border-2 border-white flex items-center justify-center text-white font-bold text-xs">
+                  PT
+                </div>
+                <span className="text-white font-bold text-sm shadow-sm">Pizzatuba</span>
+              </div>
+
+              {/* Post Image */}
+              <img
+                src={post.image}
+                alt="Post"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+
+              {/* Footer inside the card */}
+              <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent z-10 text-white text-left">
+                <p className="text-sm line-clamp-3 mb-2">
+                  {post.text}
+                </p>
+                <div className="text-xs opacity-75">{post.time}</div>
+              </div>
+            </a>
+          ))}
         </div>
 
-        <a href="https://www.facebook.com/PizzatubaOfficial" target="_blank" rel="noopener noreferrer" className="inline-flex items-center space-x-2 text-pizzatuba-orange font-bold hover:text-[#e65c00] transition-colors mt-6">
-          <span>Vaata meie Facebooki lehte</span>
+        <a href="https://www.facebook.com/PizzatubaOfficial" target="_blank" rel="noopener noreferrer" className="inline-flex items-center space-x-2 text-pizzatuba-orange font-bold hover:text-[#e65c00] transition-colors mt-4">
+          <span>Vaata kõiki postitusi Facebookis</span>
           <span>→</span>
         </a>
       </div>
