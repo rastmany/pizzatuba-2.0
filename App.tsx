@@ -75,7 +75,10 @@ const Navbar: React.FC<NavigationProps> = ({ onNavigate }) => {
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'py-3 sticky-nav-blur border-b border-ivory-dark/50 shadow-sm' : 'py-6 bg-transparent'}`}>
       <div className="max-w-6xl mx-auto px-6 flex justify-between items-center">
         <div className="flex items-center space-x-4">
-          <div className={`text-2xl font-outfit font-extrabold tracking-tight ${scrolled ? 'text-pizzatuba-orange' : 'text-white'}`}>
+          <div
+            onClick={() => onNavigate('home')}
+            className={`text-2xl font-outfit font-extrabold tracking-tight cursor-pointer transition-opacity hover:opacity-80 ${scrolled ? 'text-pizzatuba-orange' : 'text-white'}`}
+          >
             PIZZATUBA
           </div>
           {/* Compact status indicator */}
