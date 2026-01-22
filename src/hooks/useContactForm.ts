@@ -8,6 +8,13 @@ interface FormData {
     message: string;
     eventType?: string;
     eventDate?: string;
+    guests?: number;
+    duration?: number;
+    pizzas?: number;
+    drinks?: number;
+    hasCake?: boolean;
+    menuType?: string;
+    estimatedCost?: number;
 }
 
 interface UseContactFormReturn {
@@ -84,6 +91,13 @@ export function useContactForm(): UseContactFormReturn {
                 message: sanitizeInput(formData.message),
                 eventType: sanitizeInput(formData.eventType || ''),
                 eventDate: sanitizeInput(formData.eventDate || ''),
+                guests: formData.guests,
+                duration: formData.duration,
+                pizzas: formData.pizzas,
+                drinks: formData.drinks,
+                hasCake: formData.hasCake,
+                menuType: formData.menuType,
+                estimatedCost: formData.estimatedCost,
                 source: window.location.hostname
             };
 

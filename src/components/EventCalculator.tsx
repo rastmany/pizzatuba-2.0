@@ -34,20 +34,21 @@ export const EventCalculator: React.FC = () => {
 
     // Update form data when calculator state changes
     useEffect(() => {
-        let details = `Ürituse tüüp: ${eventType}\nKuupäev: ${eventDate || 'Määramata'}\nKülalisi: ${guests}\nKestvus: ${duration}h\nMenüü: ${menuType === 'standard' ? 'Standard' : 'Erimenüü'}`;
-
-        if (menuType === 'standard') {
-            details += `\n - Pizzasid: ${pizzas}\n - Joogid: ${drinks}\n - Tort: ${hasCake ? 'Jah' : 'Ei'}`;
-        }
-
         setFormData(prev => ({
             ...prev,
             eventType,
             eventDate,
             budget: userBudget ? `${userBudget}€` : '',
-            message: `Soovin korraldada üritust.\n\n${details}\n\nHinnanguline kulu: ${estimatedCost ? estimatedCost + '€' : 'Täpsustamisel'}`
+            guests,
+            duration,
+            pizzas,
+            drinks,
+            hasCake,
+            menuType,
+            estimatedCost: estimatedCost || undefined,
+            // Keep message empty for user input - details will be sent separately
         }));
-    }, [guests, duration, pizzas, drinks, hasCake, menuType, eventType, eventDate, userBudget, estimatedCost, setFormData]);
+    }, [eventType, eventDate, userBudget, guests, duration, pizzas, drinks, hasCake, menuType, estimatedCost, setFormData]);
 
     // Helper to check budget status
     const isOverBudget = userBudget && estimatedCost && parseInt(userBudget) < estimatedCost;
