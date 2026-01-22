@@ -332,56 +332,49 @@ const ValueProps: React.FC = () => {
 };
 
 const FacebookFeed: React.FC = () => {
+  useEffect(() => {
+    // Load Facebook SDK without APP_ID (works for public pages)
+    const script = document.createElement('script');
+    script.src = 'https://connect.facebook.net/et_EE/sdk.js#xfbml=1&version=v24.0';
+    script.async = true;
+    script.defer = true;
+    script.crossOrigin = 'anonymous';
+    document.body.appendChild(script);
+
+    return () => {
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
+  }, []);
+
   return (
     <section className="py-12 bg-ivory border-b border-ivory-dark">
+      <div id="fb-root"></div>
       <div className="max-w-6xl mx-auto px-6 text-center">
         <h2 className="text-3xl font-outfit font-bold mb-8">Mis meil toimub</h2>
 
-        {/* Stories-like horizontal scroll layout */}
-        <div className="flex overflow-x-auto space-x-6 pb-8 justify-start lg:justify-center px-4 -mx-4 scrollbar-hide">
-          {[1, 2, 3, 4].map((item) => (
-            <div
-              key={item}
-              className="flex-shrink-0 w-[280px] h-[450px] bg-white rounded-2xl shadow-xl border border-gray-200 relative overflow-hidden group hover:scale-[1.02] transition-transform duration-300 cursor-pointer"
-            >
-              {/* Header inside the card */}
-              <div className="absolute top-0 left-0 right-0 p-4 bg-gradient-to-b from-black/60 to-transparent z-10 flex items-center space-x-3">
-                <div className="w-8 h-8 rounded-full bg-pizzatuba-orange border-2 border-white flex items-center justify-center text-white font-bold text-xs">
-                  PT
-                </div>
-                <span className="text-white font-bold text-sm shadow-sm">Pizzatuba</span>
-              </div>
-
-              {/* Mock Content */}
-              <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
-                <div className="text-center opacity-40">
-                  <div className="text-4xl mb-2">📸</div>
-                  <p className="font-bold text-gray-500">Postitus {item}</p>
-                </div>
-                {/* 
-                  This image would be dynamic in real implementation.
-                  Using a placeholder image for visual effect:
-                */}
-                <img
-                  src={`https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?auto=format&fit=crop&w=400&q=80&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`}
-                  alt="Post"
-                  className="absolute inset-0 w-full h-full object-cover mix-blend-multiply opacity-30 hover:opacity-100 transition-opacity duration-500"
-                />
-              </div>
-
-              {/* Footer inside the card */}
-              <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent z-10 text-white text-left">
-                <p className="text-xs line-clamp-2 mb-2">
-                  Tule maitsma meie uut eripakkumist! Värske tooraine ja parimad maitsed ootavad sind. #pizzatuba #abjapaluoja
-                </p>
-                <div className="text-[10px] opacity-75">2 tundi tagasi</div>
-              </div>
-            </div>
-          ))}
+        {/* Facebook Page Plugin */}
+        <div className="flex justify-center">
+          <div
+            className="fb-page"
+            data-href="https://www.facebook.com/PizzatubaOfficial"
+            data-tabs="timeline"
+            data-width="500"
+            data-height="600"
+            data-small-header="true"
+            data-adapt-container-width="true"
+            data-hide-cover="true"
+            data-show-facepile="true"
+          >
+            <blockquote cite="https://www.facebook.com/PizzatubaOfficial" className="fb-xfbml-parse-ignore">
+              <a href="https://www.facebook.com/PizzatubaOfficial">Pizzatuba</a>
+            </blockquote>
+          </div>
         </div>
 
-        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center space-x-2 text-pizzatuba-orange font-bold hover:text-[#e65c00] transition-colors mt-4">
-          <span>Vaata kõiki postitusi</span>
+        <a href="https://www.facebook.com/PizzatubaOfficial" target="_blank" rel="noopener noreferrer" className="inline-flex items-center space-x-2 text-pizzatuba-orange font-bold hover:text-[#e65c00] transition-colors mt-6">
+          <span>Vaata meie Facebooki lehte</span>
           <span>→</span>
         </a>
       </div>
