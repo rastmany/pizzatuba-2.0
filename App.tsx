@@ -413,7 +413,7 @@ const EventsSection: React.FC<NavigationProps> = ({ onNavigate }) => {
           <div className="lg:w-1/2 relative">
             <div className="absolute -top-10 -left-10 w-40 h-40 bg-pizzatuba-orange/10 rounded-full blur-3xl -z-10"></div>
             <img
-              src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80"
+              src="/images/582282028_834401975991220_6282355860653094478_n.png"
               alt="Events at Pizzatuba"
               className="rounded-[40px] shadow-2xl w-full object-cover aspect-[4/3]"
             />
