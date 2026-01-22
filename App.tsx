@@ -96,9 +96,9 @@ const Navbar: React.FC<NavigationProps> = ({ onNavigate }) => {
           </div>
         </div>
         <div className="hidden md:flex space-x-8 text-sm font-semibold">
-          <button onClick={() => onNavigate('home')} className={`${scrolled ? 'text-gray-700 hover:text-pizzatuba-orange' : 'text-white/90 hover:text-white'}`}>Menüü</button>
-          <button onClick={() => onNavigate('home')} className={`${scrolled ? 'text-gray-700 hover:text-pizzatuba-orange' : 'text-white/90 hover:text-white'}`}>Meist</button>
-          <button onClick={() => onNavigate('home')} className={`${scrolled ? 'text-gray-700 hover:text-pizzatuba-orange' : 'text-white/90 hover:text-white'}`}>Kontakt</button>
+          <a href="#menu" className={`${scrolled ? 'text-gray-700 hover:text-pizzatuba-orange' : 'text-white/90 hover:text-white'}`}>Menüü</a>
+          <a href="#about" className={`${scrolled ? 'text-gray-700 hover:text-pizzatuba-orange' : 'text-white/90 hover:text-white'}`}>Meist</a>
+          <a href="#contact" className={`${scrolled ? 'text-gray-700 hover:text-pizzatuba-orange' : 'text-white/90 hover:text-white'}`}>Kontakt</a>
         </div>
         <div className="flex items-center space-x-3">
           <a
