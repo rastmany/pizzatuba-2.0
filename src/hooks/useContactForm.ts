@@ -38,7 +38,7 @@ const initialFormData: FormData = {
 };
 
 // Google Apps Script webhook URL
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyFUUXELkVO7hK914TLiwYrA2Fmc9Fnckr6c6aXlywXP72pOmQu4kEdd-qc03QCSgV1Sw/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbycfGfsJGZhSzP3zplw7WQSIHHY_fHPFQL1uQx1LI856BgFq45YLnwX-WEuaFg30SrMUQ/exec';
 
 export function useContactForm(): UseContactFormReturn {
     const [formData, setFormData] = useState<FormData>(initialFormData);
