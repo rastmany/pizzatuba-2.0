@@ -105,10 +105,10 @@ const Navbar: React.FC<NavigationProps> = ({ onNavigate }) => {
             href="https://waze.com/ul/hud6w6j60t"
             target="_blank"
             rel="noopener noreferrer"
-            className={`hidden sm:flex items-center space-x-1 px-4 py-2 rounded-full font-bold text-sm transition-all ${scrolled ? 'bg-indigo-500/80 text-white hover:bg-indigo-600/90' : 'bg-white/20 backdrop-blur-sm text-white border border-white/30 hover:bg-white/30'}`}
+            className={`hidden sm:flex items-center space-x-1 px-3 py-1.5 rounded-full text-xs transition-all opacity-50 hover:opacity-100 ${scrolled ? 'bg-gray-400/40 text-gray-700 hover:bg-gray-400/60' : 'bg-white/10 backdrop-blur-sm text-white/70 border border-white/20 hover:bg-white/20'}`}
           >
-            <span>🚗</span>
-            <span>Waze</span>
+            <span className="text-xs">🚗</span>
+            <span className="font-medium">Waze</span>
           </a>
           <a
             href={`tel:${CONTACT_INFO.phone}`}
