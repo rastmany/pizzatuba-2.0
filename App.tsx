@@ -42,7 +42,10 @@ const Navbar: React.FC<NavigationProps> = ({ onNavigate }) => {
       const todayHours = hoursMap[day];
 
       if (!todayHours.closed && currentTime >= todayHours.open && currentTime < todayHours.close) {
-        setStatus({ isOpen: true, text: 'Avatud' });
+        const closeHour = Math.floor(todayHours.close);
+        const closeMinute = Math.round((todayHours.close - closeHour) * 60);
+        const closeTime = `${closeHour}:${closeMinute.toString().padStart(2, '0')}`;
+        setStatus({ isOpen: true, text: closeTime });
         return;
       }
 
@@ -93,7 +96,7 @@ const Navbar: React.FC<NavigationProps> = ({ onNavigate }) => {
               </span>
               <span className={`h-3 w-px ${status.isOpen ? (scrolled ? 'bg-green-300' : 'bg-green-500/30') : (scrolled ? 'bg-red-300' : 'bg-red-500/30')}`}></span>
               <span className="uppercase whitespace-nowrap">
-                {status.isOpen ? '' : `AVAME ${status.text}`}
+                {status.isOpen ? `KUNI ${status.text}` : `AVAME ${status.text}`}
               </span>
             </div>
           </div>
@@ -177,7 +180,10 @@ const Hero: React.FC = () => {
       const todayHours = hoursMap[day];
 
       if (!todayHours.closed && currentTime >= todayHours.open && currentTime < todayHours.close) {
-        setStatus({ isOpen: true, text: 'Nüüd avatud' });
+        const closeHour = Math.floor(todayHours.close);
+        const closeMinute = Math.round((todayHours.close - closeHour) * 60);
+        const closeTime = `${closeHour}:${closeMinute.toString().padStart(2, '0')}`;
+        setStatus({ isOpen: true, text: closeTime });
         return;
       }
 
@@ -228,14 +234,10 @@ const Hero: React.FC = () => {
             <span className="uppercase">
               {status.isOpen ? 'AVATUD' : 'SULETUD'}
             </span>
-            {!status.isOpen && (
-              <>
-                <span className="h-3 w-px bg-red-500/30"></span>
-                <span className="uppercase whitespace-nowrap">
-                  AVAME {status.text.replace('Suletud (Avame ', '').replace(')', '')}
-                </span>
-              </>
-            )}
+            <span className={`h-3 w-px ${status.isOpen ? 'bg-green-500/30' : 'bg-red-500/30'}`}></span>
+            <span className="uppercase whitespace-nowrap">
+              {status.isOpen ? `KUNI ${status.text}` : `AVAME ${status.text.replace('Suletud (Avame ', '').replace(')', '')}`}
+            </span>
           </div>
 
           {/* Animated headline slider */}
