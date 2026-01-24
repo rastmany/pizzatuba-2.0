@@ -105,7 +105,7 @@ const Navbar: React.FC<NavigationProps> = ({ onNavigate }) => {
         </div>
         <div className="flex items-center space-x-3">
           <a
-            href="https://waze.com/ul/hud6w6j60t"
+            href="https://waze.com/ul?ll=58.1261509,24.4594738&navigate=yes"
             target="_blank"
             rel="noopener noreferrer"
             className={`hidden sm:flex items-center space-x-1 px-3 py-1.5 rounded-full text-xs transition-all opacity-50 hover:opacity-100 ${scrolled ? 'bg-gray-400/40 text-gray-700 hover:bg-gray-400/60' : 'bg-white/10 backdrop-blur-sm text-white/70 border border-white/20 hover:bg-white/20'}`}
@@ -500,7 +500,7 @@ const EventsSection: React.FC<NavigationProps> = ({ onNavigate }) => {
                 Arvuta sündmuse hind
               </button>
               <a
-                href="https://waze.com/ul/hud6w6j60t"
+                href="https://waze.com/ul?ll=58.1261509,24.4594738&navigate=yes"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center px-10 py-4 bg-white border border-gray-200 text-gray-800 rounded-2xl font-bold hover:bg-gray-50 transition-all shadow-md space-x-2"
@@ -558,7 +558,7 @@ const ContactForm: React.FC = () => {
                     <div className="font-bold text-sm uppercase tracking-wider mb-1">Asukoht</div>
                     <div className="text-sm text-white/80 mb-2">{CONTACT_INFO.address}</div>
                     <a
-                      href="https://waze.com/ul/hud6w6j60t"
+                      href="https://waze.com/ul?ll=58.1261509,24.4594738&navigate=yes"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center space-x-1 text-xs font-bold text-white bg-white/20 px-3 py-1.5 rounded-lg hover:bg-white/30 transition-all"
@@ -798,7 +798,7 @@ const Footer: React.FC = () => {
             <h4 className="font-outfit font-bold text-xl mb-6 text-pizzatuba-orange">Asukoht</h4>
             <p className="text-gray-400 text-sm leading-relaxed font-medium">
               {CONTACT_INFO.address}<br />
-              Viljandi maakond, Eesti
+              Eesti
             </p>
             <a
               href={`mailto:${CONTACT_INFO.email}`}
@@ -845,7 +845,7 @@ const App: React.FC = () => {
           <div className="h-[400px] w-full grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-1000 overflow-hidden border-y border-ivory-dark">
             <iframe
               title="location"
-              src="https://embed.waze.com/iframe?zoom=16&lat=58.1258693&lon=25.3562308&ct=livemap"
+              src="https://embed.waze.com/iframe?zoom=16&lat=58.1261509&lon=24.4594738&ct=livemap"
               width="100%"
               height="100%"
               style={{ border: 0 }}
