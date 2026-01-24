@@ -2,6 +2,7 @@
 export enum Category {
   PIZZAS = 'Pitsad',
   SPECIALS = 'Eripakkumised',
+  OTHER = 'Muu menüü',
   DRINKS = 'Joogid'
 }
 
@@ -13,6 +14,8 @@ export interface MenuItem {
   category: Category;
   image: string;
   isSpecial?: boolean;
+  isVegan?: boolean;
+  isSpicy?: boolean;
   ingredients?: string[];
 }
 

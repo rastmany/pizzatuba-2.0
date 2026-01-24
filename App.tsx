@@ -262,7 +262,7 @@ const Hero: React.FC = () => {
 const MenuSection: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<Category>(Category.PIZZAS);
 
-  const categories = [Category.PIZZAS, Category.SPECIALS, Category.DRINKS];
+  const categories = [Category.PIZZAS, Category.SPECIALS, Category.OTHER, Category.DRINKS];
   const filteredItems = MENU_ITEMS.filter(item => item.category === activeCategory);
 
   return (
@@ -271,15 +271,19 @@ const MenuSection: React.FC = () => {
         <div className="text-center mb-8">
           <h2 className="text-4xl md:text-5xl font-outfit font-extrabold mb-4">Menüü</h2>
           <p className="text-gray-500 max-w-xl mx-auto italic">Lihtne on parim. Värske on kohustuslik.</p>
+          <div className="flex justify-center gap-4 mt-4 text-sm text-gray-500">
+            <span className="flex items-center gap-1"><span className="text-green-600">🌿</span> Taimetoit</span>
+            <span className="flex items-center gap-1"><span className="text-red-500">🌶️</span> Vürtsikas</span>
+          </div>
         </div>
 
         <div className="flex justify-center mb-6 sticky top-[72px] z-40 py-3 bg-ivory/95 backdrop-blur-sm border-b border-ivory-dark md:border-none">
-          <div className="flex bg-ivory-soft p-1 rounded-2xl border border-ivory-dark">
+          <div className="flex bg-ivory-soft p-1 rounded-2xl border border-ivory-dark overflow-x-auto">
             {categories.map(cat => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-5 md:px-8 py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all ${activeCategory === cat ? 'bg-ivory text-pizzatuba-orange shadow-sm border border-ivory-dark' : 'text-gray-400 hover:text-gray-600'}`}
+                className={`px-4 md:px-6 py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all whitespace-nowrap ${activeCategory === cat ? 'bg-ivory text-pizzatuba-orange shadow-sm border border-ivory-dark' : 'text-gray-400 hover:text-gray-600'}`}
               >
                 {cat}
               </button>
@@ -298,6 +302,12 @@ const MenuSection: React.FC = () => {
                   <h3 className="text-lg font-outfit font-bold group-hover:text-pizzatuba-orange transition-colors">
                     {item.name}
                   </h3>
+                  {item.isVegan && (
+                    <span className="text-green-600 text-base" title="Taimetoit">🌿</span>
+                  )}
+                  {item.isSpicy && (
+                    <span className="text-red-500 text-base" title="Vürtsikas">🌶️</span>
+                  )}
                   {item.isSpecial && (
                     <span className="text-[10px] font-black uppercase tracking-widest text-pizzatuba-orange bg-pizzatuba-orange/10 px-2 py-0.5 rounded-full">
                       Eripakkumine
@@ -453,8 +463,8 @@ const EventsSection: React.FC<NavigationProps> = ({ onNavigate }) => {
           <div className="lg:w-1/2 relative">
             <div className="absolute -top-10 -left-10 w-40 h-40 bg-pizzatuba-orange/10 rounded-full blur-3xl -z-10"></div>
             <img
-              src="/images/582282028_834401975991220_6282355860653094478_n.png"
-              alt="Events at Pizzatuba"
+              src="/images/fireplace.jpg"
+              alt="Pizzatuba hubane interjöör"
               className="rounded-[40px] shadow-2xl w-full object-cover aspect-[4/3]"
             />
           </div>
@@ -609,7 +619,9 @@ const ContactForm: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Telefon</label>
+                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                    Telefon <span className="text-pizzatuba-orange">*</span>
+                  </label>
                   <input
                     type="tel"
                     value={formData.phone}
@@ -621,7 +633,9 @@ const ContactForm: React.FC = () => {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">E-mail</label>
+                <label className="block text-sm font-bold text-gray-700 mb-2">
+                  E-mail <span className="text-pizzatuba-orange">*</span>
+                </label>
                 <input
                   type="email"
                   value={formData.email}
@@ -630,6 +644,7 @@ const ContactForm: React.FC = () => {
                   placeholder="nimi@mail.ee"
                   disabled={isSubmitting}
                 />
+                <p className="text-xs text-gray-400 mt-2">* Palun sisesta telefon või e-mail</p>
               </div>
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2">Planeeritav eelarve (valikuline)</label>
@@ -702,6 +717,40 @@ const StickyCTA: React.FC = () => {
   );
 };
 
+const CookieBanner: React.FC = () => {
+  const [showBanner, setShowBanner] = useState(false);
+
+  useEffect(() => {
+    const consent = localStorage.getItem('pizzatuba_cookie_consent');
+    if (!consent) {
+      setShowBanner(true);
+    }
+  }, []);
+
+  const handleAccept = () => {
+    localStorage.setItem('pizzatuba_cookie_consent', 'accepted');
+    setShowBanner(false);
+  };
+
+  if (!showBanner) return null;
+
+  return (
+    <div className="fixed bottom-0 left-0 right-0 z-[200] p-4 bg-gray-900/95 backdrop-blur-sm border-t border-white/10">
+      <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p className="text-white/80 text-sm text-center sm:text-left">
+          See veebileht kasutab küpsiseid parema kasutuskogemuse tagamiseks.
+        </p>
+        <button
+          onClick={handleAccept}
+          className="px-6 py-2 bg-pizzatuba-orange text-white rounded-full font-bold text-sm hover:bg-[#e65c00] transition-all whitespace-nowrap"
+        >
+          Nõustun
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const Footer: React.FC = () => {
   return (
     <footer className="bg-gray-900 text-white pt-24 pb-32 md:pb-12">
@@ -723,11 +772,17 @@ const Footer: React.FC = () => {
               OÜ Pizzatuba · Reg. kood: 16599884
             </p>
             <div className="flex space-x-4">
-              {['facebook', 'instagram'].map(platform => (
-                <div key={platform} className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10 hover:bg-pizzatuba-orange hover:border-pizzatuba-orange cursor-pointer transition-all">
-                  <span className="capitalize text-xs font-bold">{platform[0]}</span>
-                </div>
-              ))}
+              <a
+                href="https://www.facebook.com/PizzatubaOfficial"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10 hover:bg-pizzatuba-orange hover:border-pizzatuba-orange transition-all"
+                aria-label="Facebook"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+              </a>
             </div>
           </div>
           <div>
@@ -745,6 +800,12 @@ const Footer: React.FC = () => {
               {CONTACT_INFO.address}<br />
               Viljandi maakond, Eesti
             </p>
+            <a
+              href={`mailto:${CONTACT_INFO.email}`}
+              className="text-gray-400 text-sm font-medium hover:text-pizzatuba-orange transition-colors mt-3 block"
+            >
+              {CONTACT_INFO.email}
+            </a>
           </div>
         </div>
 
@@ -801,6 +862,7 @@ const App: React.FC = () => {
       )}
 
       <Footer />
+      <CookieBanner />
     </div>
   );
 };

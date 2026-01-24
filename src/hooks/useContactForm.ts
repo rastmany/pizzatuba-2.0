@@ -33,7 +33,7 @@ const initialFormData: FormData = {
     email: '',
     budget: '',
     message: '',
-    eventType: 'birthday',
+    eventType: '',
     eventDate: ''
 };
 
@@ -82,24 +82,28 @@ export function useContactForm(): UseContactFormReturn {
         setIsSubmitting(true);
 
         try {
-            // Sanitize all inputs
-            const sanitizedData = {
+            // Sanitize all inputs - only include fields that have values
+            const sanitizedData: Record<string, unknown> = {
                 name: sanitizeInput(formData.name),
-                phone: sanitizeInput(formData.phone),
-                email: sanitizeInput(formData.email.toLowerCase()),
-                budget: sanitizeInput(formData.budget),
-                message: sanitizeInput(formData.message),
-                eventType: sanitizeInput(formData.eventType || ''),
-                eventDate: sanitizeInput(formData.eventDate || ''),
-                guests: formData.guests,
-                duration: formData.duration,
-                pizzas: formData.pizzas,
-                drinks: formData.drinks,
-                hasCake: formData.hasCake,
-                menuType: formData.menuType,
-                estimatedCost: formData.estimatedCost,
                 source: window.location.hostname
             };
+
+            // Only add optional fields if they have values
+            if (formData.phone) sanitizedData.phone = sanitizeInput(formData.phone);
+            if (formData.email) sanitizedData.email = sanitizeInput(formData.email.toLowerCase());
+            if (formData.budget) sanitizedData.budget = sanitizeInput(formData.budget);
+            if (formData.message) sanitizedData.message = sanitizeInput(formData.message);
+
+            // Event-specific fields - only add if this is an event booking
+            if (formData.eventType) sanitizedData.eventType = sanitizeInput(formData.eventType);
+            if (formData.eventDate) sanitizedData.eventDate = sanitizeInput(formData.eventDate);
+            if (formData.guests) sanitizedData.guests = formData.guests;
+            if (formData.duration) sanitizedData.duration = formData.duration;
+            if (formData.pizzas) sanitizedData.pizzas = formData.pizzas;
+            if (formData.drinks) sanitizedData.drinks = formData.drinks;
+            if (formData.hasCake !== undefined) sanitizedData.hasCake = formData.hasCake;
+            if (formData.menuType) sanitizedData.menuType = formData.menuType;
+            if (formData.estimatedCost) sanitizedData.estimatedCost = formData.estimatedCost;
 
             // Send to Google Apps Script
             await fetch(GOOGLE_SCRIPT_URL, {
