@@ -220,6 +220,24 @@ const Hero: React.FC = () => {
 
       <div className="relative z-10 max-w-6xl mx-auto px-6 w-full text-white">
         <div className="flex flex-col items-start max-w-3xl">
+          {/* Mobile status indicator - shown only on mobile, hidden on lg+ */}
+          <div className={`lg:hidden flex items-center space-x-2 px-3 py-1.5 rounded-full text-xs font-bold tracking-wide mb-6 border ${status.isOpen
+            ? 'bg-green-900/40 text-green-100 border-green-500/30 backdrop-blur-md shadow-[0_0_15px_rgba(34,197,94,0.3)]'
+            : 'bg-red-950/40 text-red-100 border-red-500/30 backdrop-blur-md shadow-[0_0_15px_rgba(239,68,68,0.3)]'}`}>
+            <span className={`w-2 h-2 rounded-full shadow-lg ${status.isOpen ? 'bg-green-500 shadow-green-500' : 'bg-red-500 shadow-red-500'} ${!status.isOpen ? 'animate-pulse' : ''}`}></span>
+            <span className="uppercase">
+              {status.isOpen ? 'AVATUD' : 'SULETUD'}
+            </span>
+            {!status.isOpen && (
+              <>
+                <span className="h-3 w-px bg-red-500/30"></span>
+                <span className="uppercase whitespace-nowrap">
+                  AVAME {status.text.replace('Suletud (Avame ', '').replace(')', '')}
+                </span>
+              </>
+            )}
+          </div>
+
           {/* Animated headline slider */}
           <div className="h-[140px] md:h-[200px] mb-8 overflow-hidden flex items-center">
             <h1
@@ -690,9 +708,19 @@ const Footer: React.FC = () => {
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
           <div className="col-span-1 md:col-span-2">
-            <div className="text-3xl font-outfit font-extrabold mb-6 tracking-tight">PIZZATUBA</div>
-            <p className="text-gray-400 max-w-sm mb-8 leading-relaxed">
+            <div className="flex items-center space-x-4 mb-6">
+              <span className="text-3xl font-outfit font-extrabold tracking-tight">PIZZATUBA</span>
+              <img
+                src="/images/usaldusvaarne-2025.png"
+                alt="Infopank Usaldusväärne ettevõte 2025"
+                className="w-14 h-14"
+              />
+            </div>
+            <p className="text-gray-400 max-w-sm mb-4 leading-relaxed">
               Abja-Paluoja parimad käsitöö pitsad. Oleme pühendunud kvaliteedile ja kliendi rahulolule alates esimesest rullitud tainast.
+            </p>
+            <p className="text-gray-500 text-sm mb-8">
+              OÜ Pizzatuba · Reg. kood: 16599884
             </p>
             <div className="flex space-x-4">
               {['facebook', 'instagram'].map(platform => (
@@ -723,7 +751,7 @@ const Footer: React.FC = () => {
         <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 text-[10px] md:text-xs text-gray-600 uppercase tracking-widest font-bold">
           <p>© {new Date().getFullYear()} Pizzatuba. Kõik õigused kaitstud. (v2.1)</p>
           <div className="flex space-x-6">
-            <span className="hover:text-white cursor-pointer transition-colors">Privaatsustingimused</span>
+            <a href="/Privaatsuspoliitika.odt" target="_blank" rel="noopener noreferrer" className="hover:text-white cursor-pointer transition-colors">Privaatsustingimused</a>
             <span className="hover:text-white cursor-pointer transition-colors">Küpsised</span>
           </div>
         </div>

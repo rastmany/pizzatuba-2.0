@@ -32,7 +32,7 @@ export const MENU_ITEMS: MenuItem[] = [
 ];
 
 export const CONTACT_INFO = {
-  phone: '+372 58260698',
+  phone: '+372 56359465',
   address: 'Pärnu mnt 19, Abja-Paluoja, 69403 Viljandi maakond',
   email: 'info@pizzatuba.ee'
 };
