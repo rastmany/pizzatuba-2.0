@@ -42,6 +42,9 @@ const initialFormData: FormData = {
     _loadTime: Date.now()
 };
 
+// Google Apps Script webhook URL
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbycfGfsJGZhSzP3zplw7WQSIHHY_fHPFQL1uQx1LI856BgFq45YLnwX-WEuaFg30SrMUQ/exec';
+
 export function useContactForm(): UseContactFormReturn {
     const [formData, setFormData] = useState<FormData>({
         ...initialFormData,
@@ -88,6 +91,23 @@ export function useContactForm(): UseContactFormReturn {
         e.preventDefault();
         setError(null);
 
+        // 1. Honeypot check - if filled, silently "succeed"
+        if (formData._gotcha && formData._gotcha.trim() !== '') {
+            console.log('Bot detected: honeypot filled');
+            setIsSuccess(true);
+            return;
+        }
+
+        // 2. Timing check - form must be open for at least 3 seconds
+        if (formData._loadTime) {
+            const timeDiff = Date.now() - formData._loadTime;
+            if (timeDiff < 3000) {
+                console.log('Bot detected: too fast', timeDiff);
+                setIsSuccess(true);
+                return;
+            }
+        }
+
         if (!validateForm()) {
             return;
         }
@@ -98,10 +118,7 @@ export function useContactForm(): UseContactFormReturn {
             // Sanitize all inputs - only include fields that have values
             const sanitizedData: Record<string, unknown> = {
                 name: sanitizeInput(formData.name),
-                source: window.location.hostname,
-                // Anti-spam fields
-                _gotcha: formData._gotcha || '',
-                _loadTime: formData._loadTime
+                source: window.location.hostname
             };
 
             // Only add optional fields if they have values
@@ -121,21 +138,17 @@ export function useContactForm(): UseContactFormReturn {
             if (formData.menuType) sanitizedData.menuType = formData.menuType;
             if (formData.estimatedCost) sanitizedData.estimatedCost = formData.estimatedCost;
 
-            // Send to our API endpoint (which proxies to Google Apps Script)
-            const response = await fetch('/api/contact', {
+            // Send directly to Google Apps Script
+            await fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
+                mode: 'no-cors',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(sanitizedData)
             });
 
-            const result = await response.json();
-
-            if (!response.ok) {
-                throw new Error(result.error || 'Midagi läks valesti');
-            }
-
+            // In no-cors mode we can't read response, assume success if no error
             setIsSuccess(true);
             setFormData({
                 ...initialFormData,
@@ -147,8 +160,7 @@ export function useContactForm(): UseContactFormReturn {
 
         } catch (err) {
             console.error('Error submitting form:', err);
-            const errorMessage = err instanceof Error ? err.message : 'Vabandust, midagi läks valesti. Palun proovi uuesti või helista meile.';
-            setError(errorMessage);
+            setError('Vabandust, midagi läks valesti. Palun proovi uuesti või helista meile.');
         } finally {
             setIsSubmitting(false);
         }
