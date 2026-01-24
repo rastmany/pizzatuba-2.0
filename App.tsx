@@ -590,7 +590,7 @@ const ContactForm: React.FC = () => {
           </div>
 
           <div className="md:w-3/5 p-12 bg-ivory">
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6" noValidate>
               {/* Success Message */}
               {isSuccess && (
                 <div className="p-4 bg-green-100 border border-green-300 rounded-2xl text-green-800 text-center font-medium">

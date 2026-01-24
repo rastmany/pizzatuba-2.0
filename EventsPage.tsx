@@ -224,7 +224,7 @@ export const EventsPage: React.FC<EventsPageProps> = ({ onNavigate }) => {
                                     </button>
                                 </div>
                             ) : (
-                                <form onSubmit={handleSubmit} className="space-y-6">
+                                <form onSubmit={handleSubmit} className="space-y-6" noValidate>
                                     <div>
                                         <label className="block text-xs font-bold uppercase tracking-wider text-white/70 mb-1">Nimi</label>
                                         <input

@@ -186,7 +186,7 @@ export const EventCalculator: React.FC = () => {
                         <button onClick={() => window.location.reload()} className="mt-6 text-sm underline hover:text-white">Saada uus päring</button>
                     </div>
                 ) : (
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-4" noValidate>
                         {/* Honeypot field - hidden from users, bots will fill it */}
                         <div className="absolute -left-[9999px]" aria-hidden="true">
                             <input
