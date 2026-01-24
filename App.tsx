@@ -605,6 +605,18 @@ const ContactForm: React.FC = () => {
                 </div>
               )}
 
+              {/* Honeypot field - hidden from users, bots will fill it */}
+              <div className="absolute -left-[9999px]" aria-hidden="true">
+                <input
+                  type="text"
+                  name="_gotcha"
+                  value={formData._gotcha || ''}
+                  onChange={(e) => setFormData(prev => ({ ...prev, _gotcha: e.target.value }))}
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+              </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-2">Nimi *</label>

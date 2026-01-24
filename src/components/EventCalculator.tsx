@@ -187,6 +187,18 @@ export const EventCalculator: React.FC = () => {
                     </div>
                 ) : (
                     <form onSubmit={handleSubmit} className="space-y-4">
+                        {/* Honeypot field - hidden from users, bots will fill it */}
+                        <div className="absolute -left-[9999px]" aria-hidden="true">
+                            <input
+                                type="text"
+                                name="_gotcha"
+                                value={formData._gotcha || ''}
+                                onChange={(e) => setFormData(prev => ({ ...prev, _gotcha: e.target.value }))}
+                                tabIndex={-1}
+                                autoComplete="off"
+                            />
+                        </div>
+
                         <div>
                             <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1">Nimi</label>
                             <input

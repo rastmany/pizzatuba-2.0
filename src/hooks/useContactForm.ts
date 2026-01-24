@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface FormData {
     name: string;
@@ -15,6 +15,9 @@ interface FormData {
     hasCake?: boolean;
     menuType?: string;
     estimatedCost?: number;
+    // Anti-spam fields
+    _gotcha?: string;  // Honeypot - must be empty
+    _loadTime?: number; // When form was loaded
 }
 
 interface UseContactFormReturn {
@@ -34,17 +37,27 @@ const initialFormData: FormData = {
     budget: '',
     message: '',
     eventType: '',
-    eventDate: ''
+    eventDate: '',
+    _gotcha: '',
+    _loadTime: Date.now()
 };
 
-// Google Apps Script webhook URL
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbycfGfsJGZhSzP3zplw7WQSIHHY_fHPFQL1uQx1LI856BgFq45YLnwX-WEuaFg30SrMUQ/exec';
-
 export function useContactForm(): UseContactFormReturn {
-    const [formData, setFormData] = useState<FormData>(initialFormData);
+    const [formData, setFormData] = useState<FormData>({
+        ...initialFormData,
+        _loadTime: Date.now()
+    });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    // Set load time when hook is initialized
+    useEffect(() => {
+        setFormData(prev => ({
+            ...prev,
+            _loadTime: Date.now()
+        }));
+    }, []);
 
     const validateForm = (): boolean => {
         if (!formData.name.trim()) {
@@ -85,7 +98,10 @@ export function useContactForm(): UseContactFormReturn {
             // Sanitize all inputs - only include fields that have values
             const sanitizedData: Record<string, unknown> = {
                 name: sanitizeInput(formData.name),
-                source: window.location.hostname
+                source: window.location.hostname,
+                // Anti-spam fields
+                _gotcha: formData._gotcha || '',
+                _loadTime: formData._loadTime
             };
 
             // Only add optional fields if they have values
@@ -105,34 +121,44 @@ export function useContactForm(): UseContactFormReturn {
             if (formData.menuType) sanitizedData.menuType = formData.menuType;
             if (formData.estimatedCost) sanitizedData.estimatedCost = formData.estimatedCost;
 
-            // Send to Google Apps Script
-            await fetch(GOOGLE_SCRIPT_URL, {
+            // Send to our API endpoint (which proxies to Google Apps Script)
+            const response = await fetch('/api/contact', {
                 method: 'POST',
-                mode: 'no-cors', // Google Apps Script requires no-cors mode
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(sanitizedData)
             });
 
-            // В режиме no-cors мы не можем прочитать ответ,
-            // поэтому просто считаем успешным если нет ошибки
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || 'Midagi läks valesti');
+            }
+
             setIsSuccess(true);
-            setFormData(initialFormData);
+            setFormData({
+                ...initialFormData,
+                _loadTime: Date.now()
+            });
 
             // Reset success message after 5 seconds
             setTimeout(() => setIsSuccess(false), 5000);
 
         } catch (err) {
             console.error('Error submitting form:', err);
-            setError('Vabandust, midagi läks valesti. Palun proovi uuesti või helista meile.');
+            const errorMessage = err instanceof Error ? err.message : 'Vabandust, midagi läks valesti. Palun proovi uuesti või helista meile.';
+            setError(errorMessage);
         } finally {
             setIsSubmitting(false);
         }
     };
 
     const resetForm = () => {
-        setFormData(initialFormData);
+        setFormData({
+            ...initialFormData,
+            _loadTime: Date.now()
+        });
         setError(null);
         setIsSuccess(false);
     };
