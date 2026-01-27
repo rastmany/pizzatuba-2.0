@@ -736,7 +736,7 @@ const Footer: React.FC = () => {
                 </svg>
               </a>
               <a
-                href="https://radio.pizzatuba.ee/pizzatuba"
+                href="https://radio.pizzatuba.ee"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="h-10 px-4 rounded-full bg-white/5 flex items-center justify-center border border-white/10 hover:bg-pizzatuba-orange hover:border-pizzatuba-orange transition-all text-sm font-bold"
