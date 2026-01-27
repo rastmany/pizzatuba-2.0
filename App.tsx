@@ -316,7 +316,7 @@ const MenuSection: React.FC = () => {
                     </span>
                   )}
                 </div>
-                <p className="text-gray-400 text-sm leading-relaxed max-w-lg">
+                <p className="text-gray-500 text-sm leading-relaxed max-w-lg">
                   {item.description}
                 </p>
               </div>
@@ -339,9 +339,9 @@ const MenuSection: React.FC = () => {
 
 const ValueProps: React.FC = () => {
   const props = [
-    { title: 'Ehtne Tuli', desc: 'Iga pizza küpseb kivi plaadil üle 400 kraadi juures. Sama meetod, mida kasutati Itaalias 100 aastat tagasi.', icon: '🔥' },
-    { title: 'Käsitöö Hing', desc: 'Tainas käärib 72 tundi. Iga pizza on vormitud käsitsi. Siin ei ole mingit masstoodetud.', icon: '🤲' },
-    { title: 'Sinu Koht', desc: 'Koht, kus sind tuntakse. Kus aeg peatub. Kus toit on teraapia.', icon: '🏠' }
+    { title: 'Kiviplaadil küpsetatud', desc: 'Põhi jääb krõbe. Maitse jääb meelde.', icon: '🔥' },
+    { title: 'Käsitöö Hing', desc: '24 tundi kerkiv tainas. Käsitsi pallitud. Nii sünnib õige maitse.', icon: '🤲' },
+    { title: 'Meie Fännid', desc: 'Te ei ole lihtsalt kliendid. Te olete Pizzatoa fännid. Ja see tähendab meile rohkem, kui arvate.', icon: '🍕' }
   ];
 
   return (
@@ -362,78 +362,17 @@ const ValueProps: React.FC = () => {
 };
 
 const FacebookFeed: React.FC = () => {
-  // TODO: Replace with real Facebook posts using Graph API when access token is provided
-  // For now showing mock posts with beautiful Stories design
-  const mockPosts = [
-    {
-      id: 1,
-      image: '/images/582282028_834401975991220_6282355860653094478_n.png',
-      text: 'Hubane saal ja soe õhkkond ootavad sind! Broneeri aeg oma peole.',
-      time: '2 päeva tagasi'
-    },
-    {
-      id: 2,
-      image: 'https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?auto=format&fit=crop&w=400&q=80',
-      text: 'Värskelt küpsetatud pizza puuahjust! Tule ja maitse ise.',
-      time: '4 päeva tagasi'
-    },
-    {
-      id: 3,
-      image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=400&q=80',
-      text: 'Uued eripakkumised! Vaata meie menüüd ja telli kohe.',
-      time: '1 nädal tagasi'
-    },
-    {
-      id: 4,
-      image: 'https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?auto=format&fit=crop&w=400&q=80',
-      text: 'Täname kõiki külastajaid! Oleme avatud ja ootame teid tagasi.',
-      time: '2 nädalat tagasi'
-    }
-  ];
-
   return (
     <section className="py-12 bg-ivory border-b border-ivory-dark">
       <div className="max-w-6xl mx-auto px-6 text-center">
         <h2 className="text-3xl font-outfit font-bold mb-8">Mis meil toimub</h2>
-
-        {/* Stories-like horizontal scroll layout */}
-        <div className="flex overflow-x-auto space-x-6 pb-8 justify-start lg:justify-center px-4 -mx-4 scrollbar-hide">
-          {mockPosts.map((post) => (
-            <a
-              key={post.id}
-              href="https://www.facebook.com/PizzatubaOfficial"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-shrink-0 w-[280px] h-[450px] bg-white rounded-2xl shadow-xl border border-gray-200 relative overflow-hidden group hover:scale-[1.02] transition-transform duration-300 cursor-pointer"
-            >
-              {/* Header inside the card */}
-              <div className="absolute top-0 left-0 right-0 p-4 bg-gradient-to-b from-black/60 to-transparent z-10 flex items-center space-x-3">
-                <div className="w-8 h-8 rounded-full bg-pizzatuba-orange border-2 border-white flex items-center justify-center text-white font-bold text-xs">
-                  PT
-                </div>
-                <span className="text-white font-bold text-sm shadow-sm">Pizzatuba</span>
-              </div>
-
-              {/* Post Image */}
-              <img
-                src={post.image}
-                alt="Post"
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-
-              {/* Footer inside the card */}
-              <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent z-10 text-white text-left">
-                <p className="text-sm line-clamp-3 mb-2">
-                  {post.text}
-                </p>
-                <div className="text-xs opacity-75">{post.time}</div>
-              </div>
-            </a>
-          ))}
-        </div>
-
-        <a href="https://www.facebook.com/PizzatubaOfficial" target="_blank" rel="noopener noreferrer" className="inline-flex items-center space-x-2 text-pizzatuba-orange font-bold hover:text-[#e65c00] transition-colors mt-4">
-          <span>Vaata kõiki postitusi Facebookis</span>
+        <a
+          href="https://www.facebook.com/PizzatubaOfficial"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center space-x-2 text-pizzatuba-orange font-bold hover:text-[#e65c00] transition-colors"
+        >
+          <span>Vaata meie kogukonna gruppis Facebookis</span>
           <span>→</span>
         </a>
       </div>
@@ -445,8 +384,7 @@ import { EventCalculator } from './src/components/EventCalculator';
 
 // ... (other imports)
 
-const EventsSection: React.FC<NavigationProps> = ({ onNavigate }) => {
-  const [showCalculator, setShowCalculator] = useState(false);
+const EventsSection: React.FC<NavigationProps & { showCalculator: boolean; setShowCalculator: (show: boolean) => void }> = ({ onNavigate, showCalculator, setShowCalculator }) => {
   const [wordIndex, setWordIndex] = useState(0);
 
   const words = ['perele', 'südamele', 'külalistele', 'sõpradele', 'peole', 'puhkusele', 'üritusele'];
@@ -482,7 +420,7 @@ const EventsSection: React.FC<NavigationProps> = ({ onNavigate }) => {
               </span>
             </h2>
             <p className="text-gray-500 text-lg mb-8 leading-relaxed">
-              Meie hubane saal on loodud naeru ja ühiste hetkede jaoks. Siin on ruumi 25-le lähedasele ja aega nautimiseks.
+              Meie hubane saal on loodud naeru ja ühiste hetkede jaoks. Siin on ruumi 45-le lähedasele ja aega nautimiseks.
               <br /><br />
               Et peo korraldamine oleks stressivaba, lõime sulle abimehe. Kliki nupule ja kasuta meie kalkulaatorit – nii näed kohe, kui lihtne on unistuste üritus teoks teha.
             </p>
@@ -545,7 +483,7 @@ const ContactForm: React.FC = () => {
   const { formData, setFormData, isSubmitting, isSuccess, error, handleSubmit } = useContactForm();
 
   return (
-    <section id="contact" className="py-24 bg-ivory-soft">
+    <section id="contact" className="hidden md:block py-24 bg-ivory-soft">
       <div className="max-w-6xl mx-auto px-6">
         <div className="bg-ivory rounded-[48px] shadow-2xl overflow-hidden flex flex-col md:flex-row border border-ivory-dark">
           <div className="md:w-2/5 bg-gradient-to-br from-orange-400 via-red-600 to-red-800 shadow-inner p-12 text-white flex flex-col justify-between">
@@ -708,7 +646,7 @@ const ContactForm: React.FC = () => {
   );
 };
 
-const StickyCTA: React.FC = () => {
+const StickyCTA: React.FC<{ onOpenCalculator: () => void }> = ({ onOpenCalculator }) => {
   return (
     <div className="md:hidden fixed bottom-0 left-0 right-0 z-[100] px-4 pb-6 pt-4 bg-gradient-to-t from-ivory via-ivory to-transparent">
       <div className="flex space-x-3">
@@ -719,13 +657,13 @@ const StickyCTA: React.FC = () => {
           <span>📞</span>
           <span>Telli ette</span>
         </a>
-        <a
-          href="#contact"
+        <button
+          onClick={onOpenCalculator}
           className="flex-1 bg-gray-900 text-white py-4 rounded-2xl font-bold text-center flex items-center justify-center space-x-2"
         >
           <span>📅</span>
           <span>Broneeri</span>
-        </a>
+        </button>
       </div>
     </div>
   );
@@ -776,7 +714,7 @@ const Footer: React.FC = () => {
               <img
                 src="/images/usaldusvaarne-2025.png"
                 alt="Infopank Usaldusväärne ettevõte 2025"
-                className="w-14 h-14"
+                className="w-[73px] h-[73px]"
               />
             </div>
             <p className="text-gray-400 max-w-sm mb-4 leading-relaxed">
@@ -796,6 +734,15 @@ const Footer: React.FC = () => {
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                 </svg>
+              </a>
+              <a
+                href="https://radio.pizzatuba.ee/pizzatuba"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="h-10 px-4 rounded-full bg-white/5 flex items-center justify-center border border-white/10 hover:bg-pizzatuba-orange hover:border-pizzatuba-orange transition-all text-sm font-bold"
+                aria-label="Pizzatuba FM"
+              >
+                Pizzatuba FM
               </a>
             </div>
           </div>
@@ -837,6 +784,7 @@ const Footer: React.FC = () => {
 
 const App: React.FC = () => {
   const [view, setView] = useState('home');
+  const [showCalculator, setShowCalculator] = useState(false);
 
   const onNavigate = (newView: string) => {
     setView(newView);
@@ -851,7 +799,7 @@ const App: React.FC = () => {
         <>
           <Hero />
           <FacebookFeed />
-          <EventsSection onNavigate={onNavigate} />
+          <EventsSection onNavigate={onNavigate} showCalculator={showCalculator} setShowCalculator={setShowCalculator} />
           <MenuSection />
           <ValueProps />
 
@@ -869,7 +817,7 @@ const App: React.FC = () => {
           </div>
 
           <ContactForm />
-          <StickyCTA />
+          <StickyCTA onOpenCalculator={() => setShowCalculator(true)} />
         </>
       ) : (
         <EventsPage onNavigate={onNavigate} />

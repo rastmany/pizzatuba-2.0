@@ -33,9 +33,10 @@ export const MENU_ITEMS: MenuItem[] = [
   { id: 'o6', name: 'Pizzatoa Kaste', description: 'Valge kaste küüslauguga / Sweet & chili kaste', price: 1, category: Category.OTHER, image: 'https://images.unsplash.com/photo-1472476443507-c7a5948772fc?auto=format&fit=crop&w=400&q=80' },
 
   // Drinks
-  { id: 'd1', name: 'Coca-Cola 0.5l', description: 'Karastusjook', price: 2.5, category: Category.DRINKS, image: 'https://images.unsplash.com/photo-1554866585-cd94860890b7?auto=format&fit=crop&w=100&q=80' },
-  { id: 'd2', name: 'Vesi 0.5l', description: 'Mulliga või mullita', price: 2, category: Category.DRINKS, image: 'https://images.unsplash.com/photo-1560023907-5f339617ea30?auto=format&fit=crop&w=100&q=80' },
-  { id: 'd3', name: 'Kohv', description: 'Värskelt jahvatatud oad', price: 2.5, category: Category.DRINKS, image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=100&q=80' },
+  { id: 'd1', name: '☕ Mulgikohv', description: 'Traditsiooniline mulgi kohv', price: 3, category: Category.DRINKS, image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=100&q=80' },
+  { id: 'd2', name: '🥤 Karastusjoogid', description: 'Erinevad karastusjoogid', price: 2, category: Category.DRINKS, image: 'https://images.unsplash.com/photo-1554866585-cd94860890b7?auto=format&fit=crop&w=100&q=80' },
+  { id: 'd3', name: '🍺 Erinevad õlled', description: 'Valik kohalikke ja importõllesid', price: 5, category: Category.DRINKS, image: 'https://images.unsplash.com/photo-1608270586620-248524c67de9?auto=format&fit=crop&w=100&q=80' },
+  { id: 'd4', name: '🍹 Kokteilid', description: '6–12€', price: 6, category: Category.DRINKS, image: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=100&q=80' },
 ];
 
 export const CONTACT_INFO = {

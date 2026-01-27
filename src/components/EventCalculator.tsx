@@ -97,7 +97,7 @@ export const EventCalculator: React.FC = () => {
                                 <span className="text-pizzatuba-orange">{guests}</span>
                             </label>
                             <input
-                                type="range" min="4" max="35" value={guests}
+                                type="range" min="4" max="45" value={guests}
                                 onChange={(e) => {
                                     const g = parseInt(e.target.value);
                                     setGuests(g);
