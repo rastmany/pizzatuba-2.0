@@ -714,7 +714,7 @@ const Footer: React.FC = () => {
               <img
                 src="/images/usaldusvaarne-2025.png"
                 alt="Infopank Usaldusväärne ettevõte 2025"
-                className="w-[73px] h-[73px]"
+                className="w-[110px] h-[110px]"
               />
             </div>
             <p className="text-gray-400 max-w-sm mb-4 leading-relaxed">
